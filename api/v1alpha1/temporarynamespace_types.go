@@ -25,15 +25,15 @@ import (
 type TemporaryNamespaceSpec struct {
 	TTL string `json:"ttl"`
 	// +optional
-	NamespaceName string `json:"namespaceName,omitempty"`
+	NamespaceName string `json:"namespaceName,omitzero"`
 }
 
 // TemporaryNamespaceStatus defines the observed state of TemporaryNamespace.
 type TemporaryNamespaceStatus struct {
 	// +optional
-	CreatedAt metav1.Time `json:"createdAt,omitempty"`
+	CreatedAt metav1.Time `json:"createdAt,omitzero"`
 	// +optional
-	ExpiresAt metav1.Time `json:"expiresAt,omitempty"`
+	ExpiresAt metav1.Time `json:"expiresAt,omitzero"`
 }
 
 // +kubebuilder:object:root=true
