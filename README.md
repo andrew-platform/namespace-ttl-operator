@@ -1,4 +1,4 @@
-# Namespace TTL Operator
+# Namespace TTL Operator (WIP)
 
 A Kubernetes operator that creates namespaces with a time-to-live (TTL). 
 When the TTL expires, the operator automatically deletes the namespace.
