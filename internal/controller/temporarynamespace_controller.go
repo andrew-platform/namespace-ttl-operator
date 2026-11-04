@@ -47,9 +47,12 @@ type TemporaryNamespaceReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.25.0/pkg/reconcile
 func (r *TemporaryNamespaceReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = logf.FromContext(ctx)
+	log := logf.FromContext(ctx)
+	var ns infrav1alpha1.TemporaryNamespace
 
-	// TODO(user): your logic here
+	// TODO: add error handling
+	_ = r.Get(ctx, req.NamespacedName, &ns)
+	log.Info("Fetched TemporaryNamespace", "ttl", ns.Spec.TTL)
 
 	return ctrl.Result{}, nil
 }
