@@ -51,8 +51,9 @@ func (r *TemporaryNamespaceReconciler) Reconcile(ctx context.Context, req ctrl.R
 	log := logf.FromContext(ctx)
 	var ns infrav1alpha1.TemporaryNamespace
 
-	// TODO: add error handling
-	_ = r.Get(ctx, req.NamespacedName, &ns)
+	if err := r.Get(ctx, req.NamespacedName, &ns); err != nil {
+		return ctrl.Result{}, client.IgnoreNotFound(err)
+	}
 
 	ttl, err := time.ParseDuration(ns.Spec.TTL)
 	if err != nil {
