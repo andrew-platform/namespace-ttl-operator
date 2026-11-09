@@ -18,6 +18,7 @@ package controller
 
 import (
 	"context"
+	"time"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -52,7 +53,13 @@ func (r *TemporaryNamespaceReconciler) Reconcile(ctx context.Context, req ctrl.R
 
 	// TODO: add error handling
 	_ = r.Get(ctx, req.NamespacedName, &ns)
-	log.Info("Fetched TemporaryNamespace", "ttl", ns.Spec.TTL)
+
+	ttl, err := time.ParseDuration(ns.Spec.TTL)
+	if err != nil {
+		log.Error(err, "Could not parse TTL", "ttl", ns.Spec.TTL)
+		return ctrl.Result{}, nil
+	}
+	log.Info("Parsed TTL", "duration", ttl)
 
 	return ctrl.Result{}, nil
 }
