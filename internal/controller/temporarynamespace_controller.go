@@ -20,6 +20,7 @@ import (
 	"context"
 	"time"
 
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -61,6 +62,15 @@ func (r *TemporaryNamespaceReconciler) Reconcile(ctx context.Context, req ctrl.R
 		return ctrl.Result{}, nil
 	}
 	log.Info("Parsed TTL", "duration", ttl)
+
+	if ns.Status.ExpiresAt.IsZero() {
+		now := metav1.Now()
+		ns.Status.CreatedAt = now
+		ns.Status.ExpiresAt = metav1.NewTime(now.Add(ttl))
+		if err := r.Status().Update(ctx, &ns); err != nil {
+			return ctrl.Result{}, err
+		}
+	}
 
 	return ctrl.Result{}, nil
 }
