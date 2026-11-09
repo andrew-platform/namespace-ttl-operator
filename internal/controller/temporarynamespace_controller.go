@@ -72,6 +72,13 @@ func (r *TemporaryNamespaceReconciler) Reconcile(ctx context.Context, req ctrl.R
 		}
 	}
 
+	timeLeft := time.Until(ns.Status.ExpiresAt.Time)
+	if timeLeft > 0 {
+		log.Info("Set RequeueAfter", "requeueAfter", timeLeft)
+		return ctrl.Result{RequeueAfter: timeLeft}, nil
+	}
+	log.Info("TTL expired")
+
 	return ctrl.Result{}, nil
 }
 
